@@ -1,11 +1,13 @@
 # Idealista Clone - Requirements Document
 
 ## Product Overview
+
 A real estate marketplace platform focused on house listings in Barcelona. Users can list houses for sale or rent, search and browse properties with AI-powered recommendations, view detailed property information with image galleries, and contact property owners. The platform is completely free with analytics for property owners.
 
 ## Core Functionalities
 
 ### 1. Property Listing Management
+
 - **Create Listings**: Users can create house listings with comprehensive details
 - **Property Types**: Houses only (sale or rent)
 - **Multiple Images**: Upload multiple property images with primary image designation
@@ -37,6 +39,7 @@ A real estate marketplace platform focused on house listings in Barcelona. Users
 - **Edit/Delete**: Full CRUD operations for own listings
 
 ### 2. Search & Discovery
+
 - **AI-Powered Search**: Natural language queries with intelligent recommendations
 - **Advanced Filters**:
   - Transaction type (sale/rent)
@@ -59,6 +62,7 @@ A real estate marketplace platform focused on house listings in Barcelona. Users
 - **Recently Viewed**: Track user browsing history
 
 ### 3. Property Details Page
+
 - **Image Gallery**: Carousel with multiple images, fullscreen view
 - **Comprehensive Information**:
   - Title and description
@@ -74,6 +78,7 @@ A real estate marketplace platform focused on house listings in Barcelona. Users
 - **Similar Properties**: AI-powered recommendations
 
 ### 4. User Management
+
 - **Authentication**: Clerk-based auth (email, social login)
 - **User Roles**: Single role - all users can list and browse
 - **User Profile**:
@@ -91,6 +96,7 @@ A real estate marketplace platform focused on house listings in Barcelona. Users
 - **Inquiry Management**: View received inquiries on own listings
 
 ### 5. Analytics & Insights
+
 - **Property Owner Analytics**:
   - Total views per listing
   - Daily/weekly view trends
@@ -103,6 +109,7 @@ A real estate marketplace platform focused on house listings in Barcelona. Users
   - Recent activity feed
 
 ### 6. AI-Powered Features
+
 - **Natural Language Search**: Parse user queries like "3 bedroom house with garden near Gracia"
 - **Intelligent Recommendations**: Suggest similar properties based on user behavior
 - **Smart Filters**: Auto-suggest relevant filters based on search context
@@ -110,6 +117,7 @@ A real estate marketplace platform focused on house listings in Barcelona. Users
 ## Technical Architecture
 
 ### Tech Stack
+
 - **Frontend**: Next.js 15 (App Router), React 19, TypeScript
 - **Styling**: Tailwind CSS, Shadcn UI
 - **Authentication**: Clerk
@@ -123,6 +131,7 @@ A real estate marketplace platform focused on house listings in Barcelona. Users
 - **Monitoring**: Sentry
 
 ### Application Structure
+
 ```
 app/
 ├── (logged-in)/
@@ -167,6 +176,7 @@ engine/
 ### Core Tables
 
 #### `properties`
+
 ```typescript
 {
   id: serial
@@ -218,6 +228,7 @@ engine/
 ```
 
 #### `propertyImages`
+
 ```typescript
 {
   id: serial
@@ -230,6 +241,7 @@ engine/
 ```
 
 #### `savedProperties`
+
 ```typescript
 {
   id: serial
@@ -242,6 +254,7 @@ engine/
 ```
 
 #### `propertyInquiries`
+
 ```typescript
 {
   id: serial
@@ -257,6 +270,7 @@ engine/
 ```
 
 #### `savedSearches`
+
 ```typescript
 {
   id: serial
@@ -270,6 +284,7 @@ engine/
 ```
 
 #### `propertyViews`
+
 ```typescript
 {
   id: serial
@@ -282,6 +297,7 @@ engine/
 ```
 
 ### Indexes
+
 - `properties.clerkUserId` - Owner listings lookup
 - `properties.status` - Active listings filter
 - `properties.transactionType` - Sale/rent filter
@@ -296,6 +312,7 @@ engine/
 ## User Flows
 
 ### 1. Create Property Listing Flow
+
 1. User clicks "List Property" (authenticated only)
 2. Multi-step form:
    - Step 1: Basic info (transaction type, title, description)
@@ -310,6 +327,7 @@ engine/
 6. Show success message
 
 ### 2. Search & Browse Flow
+
 1. Homepage: Featured properties + search bar
 2. User enters natural language query OR uses filters
 3. AI engine processes query (if NLP search)
@@ -324,6 +342,7 @@ engine/
 7. Click property → Detail page
 
 ### 3. Property Detail Flow
+
 1. View property images in gallery
 2. Read full description and specifications
 3. View amenities with visual icons
@@ -336,6 +355,7 @@ engine/
    - Contact owner (opens inquiry form)
 
 ### 4. Contact Owner Flow
+
 1. User clicks "Contact Owner" on property detail
 2. Form opens (modal or section):
    - Pre-filled user info (if logged in)
@@ -348,6 +368,7 @@ engine/
 7. Property owner sees inquiry in dashboard
 
 ### 5. My Listings Dashboard Flow
+
 1. User navigates to "My Listings"
 2. See all own properties with:
    - Thumbnail, title, price
@@ -362,6 +383,7 @@ engine/
 ## API Endpoints (tRPC Routers)
 
 ### `properties` Router
+
 ```typescript
 properties.list(filters?) → Property[]
 properties.getById(id) → Property | null
@@ -374,6 +396,7 @@ properties.toggleStatus(id, status) → Property
 ```
 
 ### `search` Router
+
 ```typescript
 search.query(naturalLanguageQuery, filters?) → Property[]
 search.recommendations(propertyId) → Property[]
@@ -383,6 +406,7 @@ search.deleteSavedSearch(id) → void
 ```
 
 ### `favorites` Router
+
 ```typescript
 favorites.add(propertyId) → SavedProperty
 favorites.remove(propertyId) → void
@@ -391,6 +415,7 @@ favorites.check(propertyId) → boolean
 ```
 
 ### `inquiries` Router
+
 ```typescript
 inquiries.create(propertyId, data) → PropertyInquiry
 inquiries.getReceived() → PropertyInquiry[]
@@ -399,6 +424,7 @@ inquiries.getForProperty(propertyId) → PropertyInquiry[]
 ```
 
 ### `analytics` Router
+
 ```typescript
 analytics.getPropertyStats(propertyId) → PropertyStats
 analytics.getDashboardStats() → DashboardStats
@@ -408,6 +434,7 @@ analytics.getViewTrend(propertyId, period) → ViewTrendData[]
 ## Implementation Notes
 
 ### Phase 1: Core Infrastructure (Foundation)
+
 - Database schema setup with Drizzle migrations
 - Clerk authentication integration
 - tRPC setup with routers structure
@@ -415,6 +442,7 @@ analytics.getViewTrend(propertyId, period) → ViewTrendData[]
 - Homepage with basic property grid
 
 ### Phase 2: Property Management
+
 - Create listing form (multi-step)
 - Image upload with Vercel Blob
 - Property detail page
@@ -422,6 +450,7 @@ analytics.getViewTrend(propertyId, period) → ViewTrendData[]
 - My Listings dashboard
 
 ### Phase 3: Search & Discovery
+
 - Filter sidebar component
 - Server-side search implementation
 - Google Maps integration
@@ -429,24 +458,28 @@ analytics.getViewTrend(propertyId, period) → ViewTrendData[]
 - Favorites system
 
 ### Phase 4: Communication
+
 - Contact form
 - Email notifications (Resend)
 - Inquiry management dashboard
 - Notification preferences
 
 ### Phase 5: Analytics
+
 - View tracking system
 - Property statistics dashboard
 - View trend charts
 - Dashboard widgets
 
 ### Phase 6: AI Features
+
 - Python FastAPI engine setup
 - Natural language search processing
 - Property recommendations algorithm
 - Search query parser
 
 ### Phase 7: Polish & Optimization
+
 - Skeleton loading states
 - Error handling
 - Performance optimization
@@ -455,7 +488,9 @@ analytics.getViewTrend(propertyId, period) → ViewTrendData[]
 - Testing
 
 ### Barcelona Neighborhoods Reference
+
 Implementation should include these districts/neighborhoods:
+
 - Ciutat Vella (Gothic Quarter, El Raval, Barceloneta)
 - Eixample (Dreta, Esquerra)
 - Sants-Montjuïc
@@ -468,6 +503,7 @@ Implementation should include these districts/neighborhoods:
 - Sant Martí
 
 ### Image Upload Guidelines
+
 - Max file size: 5MB per image
 - Supported formats: JPEG, PNG, WebP
 - Compress images on upload
@@ -476,6 +512,7 @@ Implementation should include these districts/neighborhoods:
 - Require at least 3 images for listing
 
 ### Google Maps Integration
+
 - Display property location with marker
 - Embed interactive map on detail page
 - Option for approximate location (privacy)
@@ -483,6 +520,7 @@ Implementation should include these districts/neighborhoods:
 - Nearby amenities (optional: schools, transport)
 
 ### AI Search Features (Engine Microservice)
+
 - NLP query parsing: Extract filters from text
 - Intent detection: Determine user search intent
 - Entity recognition: Identify neighborhoods, amenities
@@ -491,6 +529,7 @@ Implementation should include these districts/neighborhoods:
 - Content-based filtering: Similar property features
 
 ### Responsive Design Priorities
+
 - Mobile-first approach
 - Touch-friendly controls
 - Optimized image loading
@@ -499,6 +538,7 @@ Implementation should include these districts/neighborhoods:
 - Swipeable image galleries
 
 ### Performance Considerations
+
 - Image lazy loading
 - Infinite scroll for search results
 - Debounced search input
@@ -507,6 +547,7 @@ Implementation should include these districts/neighborhoods:
 - Server-side pagination
 
 ### Security & Privacy
+
 - Validate all user inputs (Zod schemas)
 - Sanitize user-generated content
 - Rate limiting on API endpoints
